@@ -27,7 +27,7 @@ namespace Address_Book
             {
                 Console.WriteLine("Contact with the same first name and last name already exists.");
                 Console.WriteLine("Please enter a different first name or last name.");
-                return; 
+                return;
             }
 
             Console.WriteLine("Enter your Address");
@@ -53,7 +53,7 @@ namespace Address_Book
             list.Add(key, customer1);
 
         }
-        
+
 
         public void Display()
         {
@@ -175,9 +175,24 @@ namespace Address_Book
         }
 
         public void Add()
-        { 
-           Details();
-               
+        {
+            Details();
+
+        }
+        public void DisplaybyCity()
+        {
+            Console.WriteLine("Enter the city");
+            string city = Console.ReadLine();
+         
+            foreach (var contact in list)
+            {
+                AddressBook person = contact.Value;
+                if (person.City.ToLower() == city.ToLower())
+                {
+                    Display();
+                   
+                }
+            }
         }
     }
 }

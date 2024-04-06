@@ -17,7 +17,8 @@ namespace Address_Book
             Console.WriteLine("Enter your choice");
             Console.WriteLine("1.If you Edit your Contact Deatails");
             Console.WriteLine("2.If you Delete your Contact Deatails");
-            Console.WriteLine("3.Do you want Add another adress");
+            Console.WriteLine("3.Do you want Add another adressBook");
+            Console.WriteLine("4.Search person accross multiple AddressBook");
             int choice=int.Parse(Console.ReadLine());
             
           switch(choice)
@@ -32,6 +33,9 @@ namespace Address_Book
                 case 3:
                     contact1.Add();
                     contact1.Display();
+                    break;
+                case 4:
+                    contact1.DisplaybyCity();
                     break;
           }
         }
