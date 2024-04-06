@@ -12,13 +12,13 @@ namespace Address_Book
         {
             ContactDetails contact1 = new ContactDetails();
             contact1.Details();
-            contact1.display();
+            contact1.Display();
             Console.WriteLine("If you Edit your Contact Deatails press 1 or if not press 0");
             int edit = int.Parse(Console.ReadLine());
             if (edit == 1)
             {
-                contact1.Edit();
-                contact1.display();
+                contact1.EditDetails();
+                contact1.Display();
             }
 
         }
