@@ -145,5 +145,21 @@ namespace Address_Book
                 }
             }
         }
+
+        public void DeletePerson()
+        {
+            Console.WriteLine("enter your name");
+            string name = Console.ReadLine();
+
+            if (list.ContainsKey(name))
+            {
+                list.Remove(name);
+                Console.WriteLine($"Contact with the first name {name} deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"No contact found with the first name {name}.");
+            }
+        }
     }
 }

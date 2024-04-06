@@ -20,7 +20,12 @@ namespace Address_Book
                 contact1.EditDetails();
                 contact1.Display();
             }
-
+            Console.WriteLine("If you Delete your Contact Deatails press 1 or if not press 0");
+            int delete = int.Parse(Console.ReadLine());
+            if (delete== 1)
+            {
+                contact1.DeletePerson();
+            }
         }
     }
 }
