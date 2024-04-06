@@ -151,7 +151,27 @@ namespace Address_Book
 
 
             }
-            
+        }
+
+        public void Delete()
+        {
+            Console.WriteLine("enter your name");
+            string personname = Console.ReadLine();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                AddressBook person = (AddressBook)list[i];
+                if (person.Equals(personname))
+                {
+                    list.RemoveAt(i); // Remove the person from the list
+                    Console.WriteLine($"Person with first name '{personname}' deleted successfully.");
+                    return;
+                }
+
+                Console.WriteLine($"Person with first name '{personname}' not found.");
+            }
+
+
         }
     }
 }
