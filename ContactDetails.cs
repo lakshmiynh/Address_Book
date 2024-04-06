@@ -60,11 +60,98 @@ namespace Address_Book
                 }
 
             }
-        static void Main(string[] args )
+
+        public void Edit()
         {
-            ContactDetails person1=new ContactDetails();
-            person1.Details();
-            person1.display();
+            bool continueEditing = true;
+            while (continueEditing)
+            {
+                Console.WriteLine("Do you want change anything type your name");
+
+                String name = Console.ReadLine();
+
+                Console.WriteLine(" choose the options below to edit");
+                Console.WriteLine("1.Firstname");
+                Console.WriteLine("2.Lastname");
+                Console.WriteLine("3.Address");
+                Console.WriteLine("4.City");
+                Console.WriteLine("5.state");
+                Console.WriteLine("6.zip");
+                Console.WriteLine("7.phonenumber");
+                Console.WriteLine("8.email");
+                int choice = Convert.ToInt32(Console.ReadLine());
+
+                foreach (AddressBook contacts in list)
+                {
+                    if (name.Equals(contacts.Firstname))
+                    {
+                        switch (choice)
+                        {
+                            case 1:
+                                Console.WriteLine("Enter the new firstname");
+                                string newfirstname = Console.ReadLine();
+                                contacts.Firstname = newfirstname;
+                                break;
+
+                            case 2:
+                                Console.WriteLine("Enter the new lastname");
+                                string newlastname = Console.ReadLine();
+                                contacts.Lastname = newlastname;
+                                break;
+
+                            case 3:
+                                Console.WriteLine("Enter the new Address");
+                                string newaddress = Console.ReadLine();
+                                contacts.Address = newaddress;
+                                break;
+
+                            case 4:
+                                Console.WriteLine("Enter the new city");
+                                string newcity = Console.ReadLine();
+                                contacts.City = newcity;
+                                break;
+
+                            case 5:
+                                Console.WriteLine("Enter the new state");
+                                string newstate = Console.ReadLine();
+                                contacts.State = newstate;
+                                break;
+
+                            case 6:
+                                Console.WriteLine("Enter the new zip");
+                                string newzip = Console.ReadLine();
+                                contacts.Zip = newzip;
+                                break;
+
+                            case 7:
+                                Console.WriteLine("Enter the new phone number");
+                                string newphonenumber = Console.ReadLine();
+                                contacts.Phonenumber = newphonenumber;
+                                break;
+
+                            case 8:
+                                Console.WriteLine("Enter the new emailid");
+                                string newemail = Console.ReadLine();
+                                contacts.Email = newemail;
+                                break;
+
+                        }
+
+                    }
+
+                }
+
+                Console.WriteLine("Do you want to continue editing? (yes/no)");
+                string continueEditingInput = Console.ReadLine();
+
+                if (continueEditingInput.ToLower() != "yes")
+                {
+                    continueEditing = false;
+                }
+
+
+            }
+            
         }
     }
 }
