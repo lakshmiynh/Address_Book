@@ -23,6 +23,13 @@ namespace Address_Book
 
             string key = $"{firstname.ToLower()}_{lastname.ToLower()}";
 
+            if (list.ContainsKey(key))
+            {
+                Console.WriteLine("Contact with the same first name and last name already exists.");
+                Console.WriteLine("Please enter a different first name or last name.");
+                return; 
+            }
+
             Console.WriteLine("Enter your Address");
             string address = Console.ReadLine();
 
