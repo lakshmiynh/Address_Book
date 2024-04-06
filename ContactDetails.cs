@@ -202,5 +202,25 @@ namespace Address_Book
 
             }
         }
+
+        public void CountContactsByCity()
+        {
+            Console.WriteLine("Enter the city");
+            string city= Console.ReadLine();
+
+            var contactsCount = list.Values
+                .Where(person => person.City.ToLower() == city.ToLower())
+                .Count();
+
+            if (contactsCount > 0)
+            {
+                Console.WriteLine($"Number of contacts in {city}: {contactsCount}");
+            }
+            else
+            {
+                Console.WriteLine($"No contacts found in {city}.");
+            }
+        }
+
     }
 }
