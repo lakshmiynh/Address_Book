@@ -21,6 +21,8 @@ namespace Address_Book
             Console.WriteLine("Enter your last name");
             string lastname = Console.ReadLine();
 
+            string key = $"{firstname.ToLower()}_{lastname.ToLower()}";
+
             Console.WriteLine("Enter your Address");
             string address = Console.ReadLine();
 
@@ -41,7 +43,7 @@ namespace Address_Book
 
 
             AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
-            list.Add(firstname, customer1);
+            list.Add(key, customer1);
 
         }
         
