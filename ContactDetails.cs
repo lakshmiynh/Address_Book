@@ -10,7 +10,7 @@ namespace Address_Book
     public class ContactDetails
     {
        
-            static ArrayList list = new ArrayList();
+            static Dictionary<string,AddressBook> list = new Dictionary<string,AddressBook>();
             public void Details()
             {
                 Console.WriteLine("Enter your first name");
@@ -40,31 +40,27 @@ namespace Address_Book
 
                 AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
 
-                list.Add(customer1);
+                list.Add(firstname, customer1);
 
             }
 
-            public void display()
-            {
-                foreach (AddressBook person in list)
-                {
-
-                    Console.WriteLine($"First Name: {person.Firstname}");
-                    Console.WriteLine($"Last Name: {person.Lastname}");
-                    Console.WriteLine($"Address: {person.Address}");
-                    Console.WriteLine($"City: {person.City}");
-                    Console.WriteLine($"State: {person.State}");
-                    Console.WriteLine($"Zip Code: {person.Zip}");
-                    Console.WriteLine($"Phone Number: {person.Phonenumber}");
-                    Console.WriteLine($"Email: {person.Email}");
-                }
-
-            }
-        static void Main(string[] args )
+        public void Display()
         {
-            ContactDetails person1=new ContactDetails();
-            person1.Details();
-            person1.display();
+            foreach (var contact in list)
+            {
+                
+                AddressBook person = contact.Value;
+                Console.WriteLine($"First Name: {person.Firstname}");
+                Console.WriteLine($"Last Name: {person.Lastname}");
+                Console.WriteLine($"Address: {person.Address}");
+                Console.WriteLine($"City: {person.City}");
+                Console.WriteLine($"State: {person.State}");
+                Console.WriteLine($"Zip Code: {person.Zip}");
+                Console.WriteLine($"Phone Number: {person.Phonenumber}");
+                Console.WriteLine($"Email: {person.Email}");
+                Console.WriteLine();
+            }
         }
+
     }
 }
