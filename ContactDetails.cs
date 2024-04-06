@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace Address_Book
         static Dictionary<string, AddressBook> list = new Dictionary<string, AddressBook>();
         public void Details()
         {
+
             Console.WriteLine("Enter your first name");
             string firstname = Console.ReadLine();
 
@@ -39,10 +41,10 @@ namespace Address_Book
 
 
             AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
-
             list.Add(firstname, customer1);
 
         }
+        
 
         public void Display()
         {
@@ -161,6 +163,12 @@ namespace Address_Book
             {
                 Console.WriteLine($"No contact found with the first name {name}.");
             }
+        }
+
+        public void Add()
+        { 
+           Details();
+               
         }
     }
 }

@@ -13,19 +13,27 @@ namespace Address_Book
             ContactDetails contact1 = new ContactDetails();
             contact1.Details();
             contact1.Display();
-            Console.WriteLine("If you Edit your Contact Deatails press 1 or if not press 0");
-            int edit = int.Parse(Console.ReadLine());
-            if (edit == 1)
-            {
+
+            Console.WriteLine("Enter your choice");
+            Console.WriteLine("1.If you Edit your Contact Deatails");
+            Console.WriteLine("2.If you Delete your Contact Deatails");
+            Console.WriteLine("3.Do you want Add another adress");
+            int choice=int.Parse(Console.ReadLine());
+            
+          switch(choice)
+          {
+                case 1:
                 contact1.EditDetails();
                 contact1.Display();
-            }
-            Console.WriteLine("If you Delete your Contact Deatails press 1 or if not press 0");
-            int delete = int.Parse(Console.ReadLine());
-            if (delete == 1)
-            {
-                contact1.DeletePerson();
-            }
+                    break;
+                case 2:
+                    contact1.DeletePerson();
+                    break;
+                case 3:
+                    contact1.Add();
+                    contact1.Display();
+                    break;
+          }
         }
     }
 }
