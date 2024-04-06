@@ -183,15 +183,23 @@ namespace Address_Book
         {
             Console.WriteLine("Enter the city");
             string city = Console.ReadLine();
-         
-            foreach (var contact in list)
+
+            var contactsInCity = list.Values
+        .Where(person => person.City.ToLower() == city.ToLower()); // linq method
+
+            if (contactsInCity.Any())  // linq  method
             {
-                AddressBook person = contact.Value;
-                if (person.City.ToLower() == city.ToLower())
+
+                foreach (var person in contactsInCity)
                 {
                     Display();
-                   
+
                 }
+            }
+            else
+            {
+                Console.WriteLine($"No contacts found in the city: {city}");
+
             }
         }
     }
