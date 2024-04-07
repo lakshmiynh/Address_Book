@@ -1,59 +1,72 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Address_Book
 {
     public class ContactDetails
     {
-
         static Dictionary<string, AddressBook> list = new Dictionary<string, AddressBook>();
         public void Details()
-        {
+        {   
+                string firstname = ValidateInput("First Name", @"^[A-Za-z]+$");
 
-            Console.WriteLine("Enter your first name");
-            string firstname = Console.ReadLine();
+                string lastname = ValidateInput("Last Name", @"^[A-Za-z]+$");
 
-            Console.WriteLine("Enter your last name");
-            string lastname = Console.ReadLine();
+                string key = $"{firstname.ToLower()}_{lastname.ToLower()}";
 
-            string key = $"{firstname.ToLower()}_{lastname.ToLower()}";
+                if (list.ContainsKey(key))
+                {
+                    throw new InvalidException("Contact with the same first name and last name already exists.");
+                }
 
-            if (list.ContainsKey(key))
-            {
-                Console.WriteLine("Contact with the same first name and last name already exists.");
-                Console.WriteLine("Please enter a different first name or last name.");
-                return;
-            }
+                Console.WriteLine("Enter your Address");
+                string address = Console.ReadLine();
 
-            Console.WriteLine("Enter your Address");
-            string address = Console.ReadLine();
+                Console.WriteLine("Enter your City");
+                string city = Console.ReadLine();
 
-            Console.WriteLine("Enter your City");
-            string city = Console.ReadLine();
+                Console.WriteLine("Enter your State");
+                string state = Console.ReadLine();
 
-            Console.WriteLine("Enter your State");
-            string state = Console.ReadLine();
+                string zip = ValidateInput("Zip Code", @"^\d{5}$");
 
-            Console.WriteLine("Enter your zip code");
-            string zip = Console.ReadLine();
+                string phonenumber = ValidateInput("Phone Number", @"^\d{10}$");
 
-            Console.WriteLine("Enter your phone number");
-            string phonenumber = Console.ReadLine();
+                string email = ValidateInput("Email", @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
 
-            Console.WriteLine("Enter your Email");
-            string email = Console.ReadLine();
-
-
-            AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
-            list.Add(key, customer1);
-
+                AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
+                list.Add(key, customer1);    
         }
 
+        private string ValidateInput(string fieldName, string regexPattern)
+        {
+            string input;
+            Regex regex = new Regex(regexPattern);
+            do
+            {
+                Console.WriteLine($"Enter your {fieldName}");
+                input = Console.ReadLine();
+                if (!regex.IsMatch(input))
+                {
+                    Console.WriteLine($"Invalid {fieldName}. Please try again.");
+                }
+            } while (!regex.IsMatch(input));
+            return input;
+        }
+
+        public class InvalidException : Exception
+        {
+            public InvalidException(string message) : base(message)
+            {
+            }
+        }
 
         public void Display()
         {
@@ -176,7 +189,14 @@ namespace Address_Book
 
         public void Add()
         {
-            Details();
+            try
+            {
+                Details();
+            }
+            catch (InvalidException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
         }
         public void DisplaybyCity()
@@ -185,7 +205,7 @@ namespace Address_Book
             string city = Console.ReadLine();
 
             var contactsInCity = list.Values
-        .Where(person => person.City.ToLower() == city.ToLower()); // linq method
+        .Where(person => person.City.ToLower() == city.ToLower()); 
 
             if (contactsInCity.Any())  // linq  method
             {
@@ -199,7 +219,6 @@ namespace Address_Book
             else
             {
                 Console.WriteLine($"No contacts found in the city: {city}");
-
             }
         }
 
