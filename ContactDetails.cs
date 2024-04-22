@@ -15,46 +15,167 @@ namespace Address_Book
 {
     public class ContactDetails
     {
+        private SqlConnection connection;
+        private string connectionString = "server=(localdb)\\MSSQLLOCALDB; Initial Catalog = Contacts; Integrated Security = SSPI";
+        public ContactDetails()
+        {
+            connection = new SqlConnection(connectionString);
+        }
         static Dictionary<string, AddressBook> list = new Dictionary<string, AddressBook>();
+        public void CreateContactTable()
+        {
+            try
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"
+                CREATE TABLE ContactDetailsTable1 (
+                ID INT PRIMARY KEY IDENTITY,
+                FirstName NVARCHAR(50),
+                LastName NVARCHAR(50),
+                Address NVARCHAR(255),
+                City NVARCHAR(50),
+                State NVARCHAR(50),
+                Zip NVARCHAR(10),
+                PhoneNumber NVARCHAR(15),
+                Email NVARCHAR(100))";
+
+                command.ExecuteNonQuery();
+                Console.WriteLine("ContactDetailsTable created successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error creating table: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
 
         public void Details()
-        {   
-                string firstname = ValidateInput("First Name", @"^[A-Za-z]+$");
+        {
+            string firstname = ValidateInput("First Name", @"^[A-Za-z]+$");
 
-                string lastname = ValidateInput("Last Name", @"^[A-Za-z]+$");
+            string lastname = ValidateInput("Last Name", @"^[A-Za-z]+$");
 
-                string key = $"{firstname.ToLower()}_{lastname.ToLower()}";
+            string key = $"{firstname.ToLower()}_{lastname.ToLower()}";
 
-                if (list.ContainsKey(key))
+            if (list.ContainsKey(key))
+            {
+                throw new InvalidException("Contact with the same first name and last name already exists.");
+            }
+
+            Console.WriteLine("Enter your Address");
+            string address = Console.ReadLine();
+            File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\newfile.txt", $"{address}\n.");
+
+            Console.WriteLine("Enter your City");
+            string city = Console.ReadLine();
+
+            File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\newfile.txt", $"{city}\n.");
+
+            Console.WriteLine("Enter your State");
+            string state = Console.ReadLine();
+
+            File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\newfile.txt", $"{state}\n.");
+
+            string zip = ValidateInput("Zip Code", @"^\d{6}$");
+
+            string phonenumber = ValidateInput("Phone Number", @"^\d{10}$");
+
+            string email = ValidateInput("Email", @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
+
+            Console.WriteLine(File.ReadAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\newfile.txt"));
+
+            AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
+            list.Add(key, customer1);
+
+            try
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "INSERT INTO ContactDetailsTable1 (FirstName, LastName, Address, City, State, Zip, PhoneNumber, Email) VALUES (@FirstName, @LastName, @Address, @City, @State, @Zip, @PhoneNumber, @Email)";
+                command.Parameters.AddWithValue("@FirstName", firstname);
+                command.Parameters.AddWithValue("@LastName", lastname);
+                command.Parameters.AddWithValue("@Address", address);
+                command.Parameters.AddWithValue("@City", city);
+                command.Parameters.AddWithValue("@State", state);
+                command.Parameters.AddWithValue("@Zip", zip);
+                command.Parameters.AddWithValue("@PhoneNumber", phonenumber);
+                command.Parameters.AddWithValue("@Email", email);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error inserting data: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void Displaytable()
+        {
+            try
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM ContactDetailsTable1";
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    throw new InvalidException("Contact with the same first name and last name already exists.");
+                    Console.WriteLine($"ID: {reader["ID"]}");
+                    Console.WriteLine($"First Name: {reader["FirstName"]}");
+                    Console.WriteLine($"Last Name: {reader["LastName"]}");
+                    Console.WriteLine($"Address: {reader["Address"]}");
+                    Console.WriteLine($"City: {reader["City"]}");
+                    Console.WriteLine($"State: {reader["State"]}");
+                    Console.WriteLine($"Zip Code: {reader["Zip"]}");
+                    Console.WriteLine($"Phone Number: {reader["PhoneNumber"]}");
+                    Console.WriteLine($"Email: {reader["Email"]}");
+                    Console.WriteLine();
                 }
 
-                 Console.WriteLine("Enter your Address");
-                 string address = Console.ReadLine();
-                 File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{address}\n.");
-
-                Console.WriteLine("Enter your City");
-                string city = Console.ReadLine();
-
-                 File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{city}\n.");
-
-                 Console.WriteLine("Enter your State");
-                 string state = Console.ReadLine();
-
-                 File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{state}\n.");
-
-                string zip = ValidateInput("Zip Code", @"^\d{6}$");
-
-                string phonenumber = ValidateInput("Phone Number", @"^\d{10}$");
-
-                string email = ValidateInput("Email", @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
-
-                Console.WriteLine(File.ReadAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt"));
-
-                AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
-                list.Add(key, customer1);
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error retrieving data: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
+
+        public void Update(string name, int Id)
+        {
+            string updateData = "updateTABLE ContactDetailsTable1  set @Firstname = Name where @ID =  ID";
+            SqlCommand sqlCommand = new(updateData, connection);
+            connection.Open();
+            sqlCommand.Parameters.AddWithValue("@Firstname", name);
+            sqlCommand.Parameters.AddWithValue("@ID", Id);
+            sqlCommand.ExecuteNonQuery();
+            Console.WriteLine("Name update to " + name);
+            connection.Close();
+        }
+
+        public void Delete(int id)
+        {
+            string deleteData = "delete ContactDetailsTable1 where ID = @Id";
+            SqlCommand sqlCommand = new(deleteData, connection);
+            connection.Open();
+            sqlCommand.Parameters.AddWithValue("@Id", id);
+            sqlCommand.ExecuteNonQuery();
+            Console.WriteLine("Deleted!");
+            connection.Close();
+        }
+
+
 
         private string ValidateInput(string fieldName, string regexPattern)
         {
@@ -65,7 +186,7 @@ namespace Address_Book
                 Console.WriteLine($"Enter your {fieldName}");
                 input = Console.ReadLine();
 
-                File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{ input }\n.");
+                File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\newfile.txt", $"{input}\n.");
 
                 if (!regex.IsMatch(input))
                 {
@@ -81,7 +202,7 @@ namespace Address_Book
             {
             }
         }
-        
+
         public void Display()
         {
             foreach (var contact in list)
@@ -187,7 +308,7 @@ namespace Address_Book
 
         public void DeletePerson()
         {
-            Console.WriteLine("Enter your name");
+            Console.WriteLine("enter your name");
             string name = Console.ReadLine();
 
             if (list.ContainsKey(name))
@@ -219,7 +340,7 @@ namespace Address_Book
             string city = Console.ReadLine();
 
             var contactsInCity = list.Values
-            .Where(person => person.City.ToLower() == city.ToLower()); 
+        .Where(person => person.City.ToLower() == city.ToLower());
 
             if (contactsInCity.Any())  // linq  method
             {
@@ -239,7 +360,7 @@ namespace Address_Book
         public void CountContactsByCity()
         {
             Console.WriteLine("Enter the city");
-            string city= Console.ReadLine();
+            string city = Console.ReadLine();
 
             var contactsCount = list.Values
                 .Where(person => person.City.ToLower() == city.ToLower())
