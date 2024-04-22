@@ -7,12 +7,16 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.IO;
+using System.Data.SqlClient;
+
 
 namespace Address_Book
 {
     public class ContactDetails
     {
         static Dictionary<string, AddressBook> list = new Dictionary<string, AddressBook>();
+
         public void Details()
         {   
                 string firstname = ValidateInput("First Name", @"^[A-Za-z]+$");
@@ -26,23 +30,30 @@ namespace Address_Book
                     throw new InvalidException("Contact with the same first name and last name already exists.");
                 }
 
-                Console.WriteLine("Enter your Address");
-                string address = Console.ReadLine();
+                 Console.WriteLine("Enter your Address");
+                 string address = Console.ReadLine();
+                 File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{address}\n.");
 
                 Console.WriteLine("Enter your City");
                 string city = Console.ReadLine();
 
-                Console.WriteLine("Enter your State");
-                string state = Console.ReadLine();
+                 File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{city}\n.");
 
-                string zip = ValidateInput("Zip Code", @"^\d{5}$");
+                 Console.WriteLine("Enter your State");
+                 string state = Console.ReadLine();
+
+                 File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{state}\n.");
+
+                string zip = ValidateInput("Zip Code", @"^\d{6}$");
 
                 string phonenumber = ValidateInput("Phone Number", @"^\d{10}$");
 
                 string email = ValidateInput("Email", @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
 
+                Console.WriteLine(File.ReadAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt"));
+
                 AddressBook customer1 = new AddressBook(firstname, lastname, address, city, state, zip, phonenumber, email);
-                list.Add(key, customer1);    
+                list.Add(key, customer1);
         }
 
         private string ValidateInput(string fieldName, string regexPattern)
@@ -53,6 +64,9 @@ namespace Address_Book
             {
                 Console.WriteLine($"Enter your {fieldName}");
                 input = Console.ReadLine();
+
+                File.AppendAllText("C:\\Users\\laksh\\OneDrive\\Desktop\\contactfile.txt", $"{ input }\n.");
+
                 if (!regex.IsMatch(input))
                 {
                     Console.WriteLine($"Invalid {fieldName}. Please try again.");
@@ -67,7 +81,7 @@ namespace Address_Book
             {
             }
         }
-
+        
         public void Display()
         {
             foreach (var contact in list)
@@ -173,7 +187,7 @@ namespace Address_Book
 
         public void DeletePerson()
         {
-            Console.WriteLine("enter your name");
+            Console.WriteLine("Enter your name");
             string name = Console.ReadLine();
 
             if (list.ContainsKey(name))
@@ -205,7 +219,7 @@ namespace Address_Book
             string city = Console.ReadLine();
 
             var contactsInCity = list.Values
-        .Where(person => person.City.ToLower() == city.ToLower()); 
+            .Where(person => person.City.ToLower() == city.ToLower()); 
 
             if (contactsInCity.Any())  // linq  method
             {
